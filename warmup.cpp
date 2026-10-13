@@ -119,9 +119,40 @@ int main() {
     //  Q1  ·  THE WEIGHING SESSION          (see README)
     //  Uses: morningWeights
     // =================================================================
-
+    int total = 0;
+    int valid = 0;
+    int valid_run = 0;
+    int max_run = 0;
+    pair<int,int> heavy = {0,0};
+    for(int i = 0; i < morningWeights.size(); i++){
+        total += morningWeights[i];
+        if(heavy.first < morningWeights[i]){
+            heavy.first = morningWeights[i];
+            heavy.second = i;
+        }
+        if((morningWeights[i] > 0) && (morningWeights[i] <= 80)){
+            valid_run += 1;
+            valid += 1;
+        }
+        else{
+            if(valid_run > max_run){
+                max_run = valid_run;
+            }
+            valid_run = 0;
+        }
+        if(i == morningWeights.size()-1){
+            if(valid_run > max_run){
+                max_run = valid_run;
+            }
+            valid_run = 0;
+        }
+    }
     cout << "=== Q1 ===\n";
-
+    cout << "Total: " << total << "\n";
+    cout << "Valid Weights: " << valid << "\n";
+    cout << "Heaviest Weight: " << heavy.first << "\n";
+    cout << "Position of Heaviest Weight: " << heavy.second << "\n";
+    cout << "Longest run of valid weights: " << max_run << "\n";
 
 
 
