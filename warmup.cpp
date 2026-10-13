@@ -165,11 +165,45 @@ int main() {
     //  Uses: logbook
     // =================================================================
 
-    cout << "=== Q2 ===\n";
 
-
-
-
+    vector<int> A = {0,0};
+    vector<int> B = {0,0};
+    vector<int> C = {0,0};
+    for(Delivery i : logbook){
+        if(i.grade == 'A'){
+            A[0] += 1;
+            A[1] += i.kg;
+        }
+        else if(i.grade == 'B'){
+            B[0] += 1;
+            B[1] += i.kg;
+        }
+        else if(i.grade == 'C'){
+            C[0] += 1;
+            C[1] += i.kg;
+        }
+    }
+    char best;
+    if(A[0] == 0 || B[0] == 0 || C[0] == 0){
+        cout << "Zero encountered";
+    }
+    else{
+        if(A[1]/A[0] == max(max(C[1]/C[0],A[1]/A[0]),B[1]/B[0])){
+            best = 'A';
+        }
+        if(B[1]/B[0] == max(max(C[1]/C[0],A[1]/A[0]),B[1]/B[0])){
+            best = 'B';
+        }
+        if(C[1]/C[0] == max(max(C[1]/C[0],A[1]/A[0]),B[1]/B[0])){
+            best = 'C';
+        }
+        
+        cout << "=== Q2 ===\n";
+        cout << "Grade A: " << A[0] << " deliveries. " <<  "Total: " << A[1] << " Average: " << A[1]/A[0] << "\n";
+        cout << "Grade B: " << B[0] << " deliveries. " <<  "Total: " << B[1] << " Average: " << B[1]/B[0] << "\n";
+        cout << "Grade C: " << C[0] << " deliveries. " <<  "Total: " << C[1] << " Average: " << C[1]/C[0] << "\n";
+        cout << "Best Average: " << best<< "\n";
+    }
 
     cout << "\n";
 
