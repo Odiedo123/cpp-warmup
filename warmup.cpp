@@ -15,7 +15,16 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cctype>
 using namespace std;
+
+
+bool is_integer(const std::string& s) {
+    return !s.empty() && std::all_of(s.begin(), s.end(), [](unsigned char c) {
+        return std::isdigit(c);
+    });
+}
+
 
 /**
  * THE RECORD
@@ -242,7 +251,49 @@ int main() {
     // =================================================================
 
     cout << "=== Q5 ===\n";
+    //     struct RawRecord {
+    //     string id;
+    //     string kg;        // text, because a volunteer can type anything
+    //     char   grade;
+    // };
 
+    // vector<RawRecord> rawRecords = {
+    //     {"F012", "45.5",  'A'},
+    //     {"F7",   "20",    'A'},
+    //     {"F033", "heavy", 'B'},
+    //     {"F021", "0",     'C'},
+    //     {"F044", "80",    'b'},
+    //     {"F055", "",      'A'},
+    //     {"F066", "31.5",  'D'},
+    //     {"F077", "92",    'B'}
+    // };
+    for(RawRecord r: rawRecords){
+        if(r.id.size() != 4){
+            cout << r.id << " Reject : Invalid id" << "\n";
+            continue;
+        }
+        if(is_integer(r.kg) == true){
+            if(stof(r.kg) <= 0 || stof(r.kg) > 80){
+                cout << r.id << " Reject : Weight out of Range" << "\n";
+                continue;
+            }
+        }
+        else{
+            if(r.kg.size() == 0){
+            cout << r.id << " Reject : Weight Missing" << "\n";
+            continue;   
+            }
+            cout << r.id << " Reject : Weight is not a number" << "\n";
+            continue;
+        }
+        if(tolower(r.grade) != 'a' && tolower(r.grade) != 'b' && tolower(r.grade) != 'c'){
+            cout << r.id << " Reject : Unknown grade" << "\n";
+            continue;
+        }
+        else{
+            cout << r.id << " Accepted" << "\n";
+        }
+    }
 
 
 
@@ -281,10 +332,6 @@ int main() {
 
     // cout << "=== Q8 ===\n";
 
-
-
-
-
     return 0;
 }
 
@@ -301,15 +348,55 @@ int main() {
 // Q3:  return the position of the first delivery by this farmer,
 //      or -1 if the farmer is not in the log at all.
 //
-// int findFarmer(const vector<Delivery> &log, string name) {
-//
-// }
+int findFarmer(const vector<Delivery> &log, string name) {
+    int count = 0;
+    bool out = false;
+    for(Delivery d : log){
+        count += 1;
+        if(d.farmer == name){
+            return count;
+        }
+    }
+    return -1;
+
+}
 
 
 // Q4:  what one delivery earns, before any cap is applied.
 //      Grade A pays 10% above the rate, B pays the rate,
 //      anything else pays 20% below it. The rate is 450.
-//
-// double payment(double kg, char grade) {
-//
-// }
+double payment(double kg, char grade) {
+    int maxi = 100000;
+    int given_out = 0;
+    double price = 0;
+    for(Delivery d : logbook){
+        if(given_out < maxi){
+            if(d.grade == 'A'){
+                price = 450*1.2*d.kg;
+            }
+            if(d.grade == 'B'){
+                price = d.kg*450;
+            }
+            else{
+                price = d.kg*450*0.8;
+            }
+            given_out += price;
+            cout << d.farmer << " Grade: " << d.grade << " "<< price << "\n"; 
+        }
+        else{
+            if(d.grade == 'A'){
+                price = 450*1.2*d.kg/2;
+            }
+            if(d.grade == 'B'){
+                price = d.kg*450/2;
+            }
+            else{
+                price = d.kg*450*0.8/2;
+            }
+            given_out += price;
+            cout << d.farmer << " Grade: " << d.grade << " "<< price << " (halved)" <<"\n"; 
+        }
+    }
+    return given_out;
+
+}
